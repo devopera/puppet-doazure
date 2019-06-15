@@ -1,0 +1,24 @@
+#!/bin/sh
+echo "Setting Azure environment variables for Terraform client [subscription]"
+export ARM_SUBSCRIPTION_ID="<%= @subscription %>"
+export ARM_TENANT_ID="<%= @tenant_id %>"
+export ARM_CLIENT_ID="<%= @client_id %>"
+export ARM_CLIENT_CERTIFICATE_PATH="${HOME}/.azure/<%= @cert_name %>-cert.pfx"
+# Output IDs
+echo "${ARM_CLIENT_ID} [${ARM_SUBSCRIPTION_ID}]"
+#
+# Currently unused env vars
+#   export ARM_CLIENT_CERTIFICATE_PASSWORD=""
+#   export ARM_CLIENT_SECRET=""
+#
+# Service principal created with:
+#   az login
+#   az ad sp create-for-rbac --name <%= @cert_name %>.<%= @domain_name %> --create-cert --scopes /subscriptions/<%= @subscription %>
+# Then read out the certificates into ~/.azure/<%= @cert_name %>.crt|pem (or via puppet) and read out the appId into ARM_CLIENT_ID (or via puppet)
+#
+# Service principals can be listed with:
+#   az ad sp list --display-name "<%= @cert_name %>"
+#
+# Azure CLI login as service principal:
+#   az login --service-principal -u https://<%= @cert_name %>.<%= @domain_name %> -p ~/.azure/<%= @cert_name %>-cert.pem --tenant "<%= @tenant_id %>"
+#
