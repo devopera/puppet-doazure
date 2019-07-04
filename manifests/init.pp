@@ -40,6 +40,7 @@ class doazure (
   File {
     owner => $user,
     group => $user,
+    ensure => 'file',
   }
 
   file { 'doazure-dir' :
@@ -49,25 +50,39 @@ class doazure (
 
   file { 'doazure-config' :
     path    => "${filepath}config",
-    ensure  => 'file',
     content => template('doazure/config.erb'),
   }
 
   file { 'doazure-clouds-config' :
     path    => "${filepath}clouds.config",
-    ensure  => 'file',
     content => template('doazure/clouds.config.erb'),
   }
 
   file { 'doazure-cert-pem' :
     path    => "${filepath}${cert_name}-cert.pem",
-    ensure  => 'file',
     content => "${cert_pem}"
   }
   file { 'doazure-cert-crt' :
     path    => "${filepath}${cert_name}-cert.crt",
-    ensure  => 'file',
     content => "${cert_crt}"
+  }
+
+  case $operatingsystem {
+    centos, redhat, fedora: {
+      yumrepo { 'azure-cli':
+        baseurl  => 'https://packages.microsoft.com/yumrepos/azure-cli',
+        enabled  => 1,
+        gpgcheck => 1,
+        gpgkey   => 'https://packages.microsoft.com/keys/microsoft.asc',
+        descr    => 'Microsoft Azure CLI install repo',
+        before   => [Package['azure-cli']],
+      }
+      if ! defined(Package['azure-cli']) {
+        package { 'azure-cli' :
+          ensure => 'present',
+        }
+      }
+    }
   }
 
   case $operatingsystem {
@@ -76,7 +91,6 @@ class doazure (
       # create a script file for required environment variables
       file { 'doazure-environment' :
         path    => "${filepath}environment",
-        ensure  => 'file',
         content => template('doazure/environment.erb'),
       }
       # if there's an open bashrc
