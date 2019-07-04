@@ -69,17 +69,20 @@ class doazure (
 
   case $operatingsystem {
     centos, redhat, fedora: {
-      yumrepo { 'azure-cli':
-        baseurl  => 'https://packages.microsoft.com/yumrepos/azure-cli',
-        enabled  => 1,
-        gpgcheck => 1,
-        gpgkey   => 'https://packages.microsoft.com/keys/microsoft.asc',
-        descr    => 'Microsoft Azure CLI install repo',
-        before   => [Package['azure-cli']],
-      }
-      if ! defined(Package['azure-cli']) {
-        package { 'azure-cli' :
-          ensure => 'present',
+      # MS repo install requires CO7 or above
+      if ($::operatingsystemmajrelease >= 7) {
+        yumrepo { 'azure-cli':
+          baseurl  => 'https://packages.microsoft.com/yumrepos/azure-cli',
+          enabled  => 1,
+          gpgcheck => 1,
+          gpgkey   => 'https://packages.microsoft.com/keys/microsoft.asc',
+          descr    => 'Microsoft Azure CLI install repo',
+          before   => [Package['azure-cli']],
+        }
+        if ! defined(Package['azure-cli']) {
+          package { 'azure-cli' :
+            ensure => 'present',
+          }
         }
       }
     }
