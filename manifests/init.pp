@@ -70,7 +70,8 @@ class doazure (
   case $operatingsystem {
     centos, redhat, fedora: {
       # MS repo install requires CO7 or above
-      if ($::operatingsystemmajrelease >= 7) {
+      # if (Float($::operatingsystemmajrelease >= 7)) {
+      if ($::operatingsystemmajrelease == "7") {
         yumrepo { 'azure-cli':
           baseurl  => 'https://packages.microsoft.com/yumrepos/azure-cli',
           enabled  => 1,
