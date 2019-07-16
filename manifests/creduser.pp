@@ -4,7 +4,7 @@ define doazure::creduser (
   # ---------------
   # setup defaults
 
-  $user = 'web',
+  $user = $title,
   $notifier_dir = '/etc/puppet/tmp',
 
   # template vars
