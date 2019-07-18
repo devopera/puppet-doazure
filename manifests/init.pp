@@ -5,8 +5,8 @@ class doazure (
   # setup defaults
 
   $user = undef,
-  $users = undef,
-  $user_defaults = undef,
+  $users = hiera('doazure::users', {}),
+  $user_defaults = hiera('doazure::user_defaults', {}),
   $notifier_dir = '/etc/puppet/tmp',
 
   # template vars
@@ -63,7 +63,7 @@ class doazure (
   }
 
   # create multiple users if details passed in hash
-  if ($users != undef) {
+  if ($users != {}) {
     create_resources(doazure::creduser, $users, $user_defaults)
   }
 
