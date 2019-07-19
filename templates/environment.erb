@@ -1,9 +1,13 @@
 #!/bin/sh
 echo "Setting Azure environment variables for Terraform client [subscription]"
+# export environment variables for Azure provider
 export ARM_SUBSCRIPTION_ID="<%= @subscription %>"
 export ARM_TENANT_ID="<%= @tenant_id %>"
 export ARM_CLIENT_ID="<%= @client_id %>"
 export ARM_CLIENT_CERTIFICATE_PATH="${HOME}/.azure/<%= @cert_name %>-cert.pfx"
+# export environment variables for use in Terraform scripts
+export TF_VAR_tenant_directory_id="<%= @tenant_directory_id %>"
+export TF_VAR_admin_user_object_id="<%= @admin_user_object_id %>"
 # Output IDs
 echo "${ARM_TENANT_ID} [${ARM_SUBSCRIPTION_ID}]"
 #

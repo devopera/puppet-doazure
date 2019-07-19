@@ -12,6 +12,8 @@ define doazure::creduser (
   $domain_name = 'example.com',
   $client_id = '',
   $tenant_id = '',
+  $tenant_directory_id = '',
+  $admin_user_object_id = '',
   $subscription = '',
   $cert_name = '',
   $cert_pem = '',
