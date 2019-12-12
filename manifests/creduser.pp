@@ -87,12 +87,7 @@ define doazure::creduser (
       concat::fragment { "doazure-bashrc-environment-${user}":
         target  => "/home/${user}/.bashrc",
         order   => '40',
-        content => @("END")
-      # add Azure environment variables if present
-      if [ -f ${filepath}environment ]; then
-        source ${filepath}environment
-      fi
-      | END
+        content => "if [ -f ${filepath}environment ]; then source ${filepath}environment; fi",
       }
       # generate pfx file from pem
       exec { "doazure-generate-cert-pfx-${user}" :
