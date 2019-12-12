@@ -5,15 +5,16 @@ class doazure (
   # setup defaults
 
   $user = undef,
-  $users = hiera('doazure::users', {}),
-  $user_defaults = hiera('doazure::user_defaults', {}),
-  $notifier_dir = '/etc/puppet/tmp',
+  $group = $user,
+  $users = {},
+  $user_defaults = {},
 
   # template vars
   $cloud_name = 'AzureCloud',
   $domain_name = 'example.com',
   $client_id = '',
-  $tenant_id = '',
+  $object_id = '',
+  $tenant_name = '',
   $tenant_directory_id = '',
   $admin_user_object_id = '',
   $subscription = '',
@@ -38,13 +39,8 @@ class doazure (
           gpgcheck => 1,
           gpgkey   => 'https://packages.microsoft.com/keys/microsoft.asc',
           descr    => 'Microsoft Azure CLI install repo',
-          before   => [Package['azure-cli']],
         }
-        if ! defined(Package['azure-cli']) {
-          package { 'azure-cli' :
-            ensure => 'present',
-          }
-        }
+        ensure_packages(['azure-cli'], { ensure => 'present', require => [Yumrepo['azure-cli']] })
       }
     }
   }
@@ -53,10 +49,12 @@ class doazure (
   if ($user != undef) {
     doazure::creduser { 'doazure-creduser-default-user' :
       user => $user,
+      group => $group,
       cloud_name => $cloud_name,
       domain_name => $domain_name,
       client_id => $client_id,
-      tenant_id => $tenant_id,
+      object_id => $object_id,
+      tenant_name => $tenant_name,
       tenant_directory_id => $tenant_directory_id,
       admin_user_object_id => $admin_user_object_id,
       subscription => $subscription,
