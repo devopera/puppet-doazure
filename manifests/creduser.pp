@@ -34,8 +34,7 @@ define doazure::creduser (
   $filepath_win = "C:\\Users\\${user}\\.azure\\"
   $filepath_cygwin = "/cygdrive/c/Users/${user}/.azure/"
   case $operatingsystem {
-    centos, redhat, fedora,
-    ubuntu, debian: {
+    centos, redhat, oraclelinux, fedora, ubuntu, debian: {
       $filepath = $filepath_linux
       $filecertroot = $filepath_linux
     }
@@ -77,8 +76,7 @@ define doazure::creduser (
   $command_pfxgen = "/usr/bin/openssl pkcs12 -export -out ${filecertroot}${cert_name}-cert.pfx -in ${filecertroot}${cert_name}-cert.pem -passout pass: ; chown ${user}:${group} ${filecertroot}${cert_name}-cert.pfx"
 
   case $operatingsystem {
-    centos, redhat, fedora,
-    ubuntu, debian: {
+    centos, redhat, oraclelinux, fedora, ubuntu, debian: {
       # create a script file for required environment variables
       file { "doazure-environment-${user}" :
         path    => "${filepath}environment",
@@ -87,7 +85,7 @@ define doazure::creduser (
       concat::fragment { "doazure-bashrc-environment-${user}":
         target  => "/home/${user}/.bashrc",
         order   => '40',
-        content => "if [ -f ${filepath}environment ]; then source ${filepath}environment; fi",
+        content => "# Add Azure settings as environment variables\nif [ -f ${filepath}environment ]; then source ${filepath}environment; fi\n",
       }
       # generate pfx file from pem
       exec { "doazure-generate-cert-pfx-${user}" :

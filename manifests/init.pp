@@ -29,7 +29,7 @@ class doazure (
 ) {
 
   case $operatingsystem {
-    centos, redhat, fedora: {
+    centos, redhat, oraclelinux, fedora: {
       # MS repo install requires CO7 or above
       # if (Float($::operatingsystemmajrelease >= 7)) {
       if ($::operatingsystemmajrelease == "7") {

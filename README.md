@@ -1,8 +1,18 @@
-# puppet-doazure
+doazure
+=======
+
 Puppet module to locally set up Azure credentials
 
 Changelog
 ---------
+
+2019-12-13 (v0.0.5)
+
+* Fixed missing newline
+
+2019-12-13 (v0.0.4)
+
+* Added Oracle Linux to list for matching
 
 2019-12-12 (v0.0.3)
 
