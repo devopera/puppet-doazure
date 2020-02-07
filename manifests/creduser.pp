@@ -11,6 +11,7 @@ define doazure::creduser (
   $cloud_name = 'AzureCloud',
   $domain_name = 'example.com',
   $client_id = '',
+  $client_secret = '',
   $object_id = '',
   $tenant_name = '',
   $tenant_directory_id = '',
@@ -120,6 +121,18 @@ define doazure::creduser (
         variable => 'ARM_CLIENT_CERTIFICATE_PATH',
         value => "${filepath}${cert_name}-cert.pfx",
       }
+      windows_env { "doazure-envvar-admin-client-id-${user}":
+        user      => "${user}",
+        mergemode => 'clobber',
+        variable => 'TF_VAR_client_id',
+        value => $client_id,
+      }
+      windows_env { "doazure-envvar-admin-client-secret-${user}":
+        user      => "${user}",
+        mergemode => 'clobber',
+        variable => 'TF_VAR_client_secret',
+        value => $client_secret,
+      }
       windows_env { "doazure-envvar-tenant-directory-id-${user}":
         user      => "${user}",
         mergemode => 'clobber',
@@ -132,6 +145,9 @@ define doazure::creduser (
         variable => 'TF_VAR_admin_user_object_id',
         value => $admin_user_object_id,
       }
+      export TF_VAR_client_id="<%= @client_id %>"
+      export TF_VAR_client_secret="<%= @client_secret %>"
+
       # generate the pfx file
       if defined(windows::cygwin_run) {
         windows::cygwin_run { "doazure-generate-cert-pfx-${user}":

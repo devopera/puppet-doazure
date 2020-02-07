@@ -6,6 +6,10 @@ Puppet module to locally set up Azure credentials
 Changelog
 ---------
 
+2020-02-07 (v0.0.6)
+
+* Added client_secret
+
 2019-12-13 (v0.0.5)
 
 * Fixed missing newline
