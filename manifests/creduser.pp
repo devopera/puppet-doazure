@@ -145,8 +145,6 @@ define doazure::creduser (
         variable => 'TF_VAR_admin_user_object_id',
         value => $admin_user_object_id,
       }
-      export TF_VAR_client_id="<%= @client_id %>"
-      export TF_VAR_client_secret="<%= @client_secret %>"
 
       # generate the pfx file
       if defined(windows::cygwin_run) {
