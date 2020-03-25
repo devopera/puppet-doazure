@@ -7,6 +7,9 @@ define doazure::creduser (
   $user = $title,
   $group = $title,
 
+  # customisable constants
+  $folder_name = '.azure',
+
   # template vars
   $cloud_name = 'AzureCloud',
   $domain_name = 'example.com',
@@ -27,13 +30,9 @@ define doazure::creduser (
 
 ) {
 
-  # No need for notify any more
-  # $mess = 'This module installs all the necessary files and environment variables. `az login` should not be required in each of the using environments (windows cmd and cygwin)'
-  # notify { "doazure-creduser-azlog-${title}" : message => "${mess}" }
-
-  $filepath_linux = "/home/${user}/.azure/"
-  $filepath_win = "C:\\Users\\${user}\\.azure\\"
-  $filepath_cygwin = "/cygdrive/c/Users/${user}/.azure/"
+  $filepath_linux = "/home/${user}/${folder_name}/"
+  $filepath_win = "C:\\Users\\${user}\\${folder_name}\\"
+  $filepath_cygwin = "/cygdrive/c/Users/${user}/${folder_name}/"
   case $operatingsystem {
     centos, redhat, oraclelinux, fedora, ubuntu, debian: {
       $filepath = $filepath_linux

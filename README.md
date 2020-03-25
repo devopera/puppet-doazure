@@ -6,25 +6,18 @@ Puppet module to locally set up Azure credentials
 Changelog
 ---------
 
-2020-02-07 (v0.0.6)
-
-* Added client_secret
-
-2019-12-13 (v0.0.5)
-
-* Fixed missing newline
-
-2019-12-13 (v0.0.4)
-
-* Added Oracle Linux to list for matching
-
-2019-12-12 (v0.0.3)
-
-* Added Windows support
-* Protected echo statements for non-tty shells
-
-2019-05-16 (v0.0.2)
-
-* Created new module to handle the rollout of an Azure Service Principal onto a machine.
+* v0.0.7
+    * Standardised folder name var across do_x modules
+* v0.0.6
+    * Added client_secret
+* v0.0.5
+    * Fixed missing newline
+* v0.0.4
+    * Added Oracle Linux to list for matching
+* v0.0.3
+    * Added Windows support
+    * Protected echo statements for non-tty shells
+* v0.0.2
+    * Created new module to handle the rollout of an Azure Service Principal onto a machine.
 
 
