@@ -146,8 +146,8 @@ define doazure::creduser (
       }
 
       # generate the pfx file
-      if defined(windows::cygwin_run) {
-        windows::cygwin_run { "doazure-generate-cert-pfx-${user}":
+      if defined(dowindows::cygwin_run) {
+        dowindows::cygwin_run { "doazure-generate-cert-pfx-${user}":
           command => "${command_pfxgen}",
           creates => "${filepath}${cert_name}-cert.pfx",
           require => [File["doazure-cert-pem-${user}"]],
