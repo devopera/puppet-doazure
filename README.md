@@ -6,6 +6,8 @@ Puppet module to locally set up Azure credentials
 Changelog
 ---------
 
+* v0.0.8
+    * Added dowindows::cygwin::run if defined
 * v0.0.7
     * Standardised folder name var across do_x modules
 * v0.0.6
