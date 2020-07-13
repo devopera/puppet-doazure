@@ -4,25 +4,25 @@ define doazure::creduser (
   # ---------------
   # setup defaults
 
-  $user = $title,
-  $group = $title,
+  $user                 = $title,
+  $group                = $title,
 
   # customisable constants
-  $folder_name = '.azure',
+  $folder_name          = '.azure',
 
   # template vars
-  $cloud_name = 'AzureCloud',
-  $domain_name = 'example.com',
-  $client_id = '',
-  $client_secret = '',
-  $object_id = '',
-  $tenant_name = '',
-  $tenant_directory_id = '',
+  $cloud_name           = 'AzureCloud',
+  $domain_name          = 'example.com',
+  $client_id            = '',
+  $client_secret        = '',
+  $object_id            = '',
+  $tenant_name          = '',
+  $tenant_directory_id  = '',
   $admin_user_object_id = '',
-  $subscription = '',
-  $cert_name = '',
-  $cert_pem = '',
-  $cert_crt = '',
+  $subscription         = '',
+  $cert_name            = '',
+  $cert_pem             = '',
+  $cert_crt             = '',
 
   # end of class arguments
   # ----------------------
@@ -45,50 +45,54 @@ define doazure::creduser (
   }
 
   File {
-    owner => $user,
-    group => $group,
+    owner  => $user,
+    group  => $group,
     ensure => 'file',
+    mode   => '0640',
   }
 
-  file { "doazure-dir-${user}" :
+  file { "doazure-dir-${user}":
+    ensure => 'directory',
     path   => "${filepath}",
-    ensure => 'directory'
+    mode   => '0750',
   }
 
-  file { "doazure-config-${user}" :
+  file { "doazure-config-${user}":
     path    => "${filepath}config",
     content => template('doazure/config.erb'),
   }
 
-  file { "doazure-clouds-config-${user}" :
+  file { "doazure-clouds-config-${user}":
     path    => "${filepath}clouds.config",
     content => template('doazure/clouds.config.erb'),
   }
 
-  file { "doazure-cert-pem-${user}" :
+  file { "doazure-cert-pem-${user}":
     path    => "${filepath}${cert_name}-cert.pem",
-    content => "${cert_pem}"
+    content => "${cert_pem}",
   }
-  file { "doazure-cert-crt-${user}" :
+  file { "doazure-cert-crt-${user}":
     path    => "${filepath}${cert_name}-cert.crt",
-    content => "${cert_crt}"
+    content => "${cert_crt}",
   }
-  $command_pfxgen = "/usr/bin/openssl pkcs12 -export -out ${filecertroot}${cert_name}-cert.pfx -in ${filecertroot}${cert_name}-cert.pem -passout pass: ; chown ${user}:${group} ${filecertroot}${cert_name}-cert.pfx"
+  $command_pfxgen = "/usr/bin/openssl pkcs12 -export -out ${filecertroot}${cert_name}-cert.pfx -in ${filecertroot}${
+    cert_name}-cert.pem -passout pass: ; chown ${user}:${group} ${filecertroot}${cert_name}-cert.pfx"
 
   case $operatingsystem {
     centos, redhat, oraclelinux, fedora, ubuntu, debian: {
       # create a script file for required environment variables
-      file { "doazure-environment-${user}" :
+      file { "doazure-environment-${user}":
         path    => "${filepath}environment",
         content => template('doazure/environment.erb'),
       }
       concat::fragment { "doazure-bashrc-environment-${user}":
         target  => "/home/${user}/.bashrc",
         order   => '40',
-        content => "# Add Azure settings as environment variables\nif [ -f ${filepath}environment ]; then source ${filepath}environment; fi\n",
+        content => "# Add Azure settings as environment variables\nif [ -f ${filepath}environment ]; then source ${
+          filepath}environment; fi\n",
       }
       # generate pfx file from pem
-      exec { "doazure-generate-cert-pfx-${user}" :
+      exec { "doazure-generate-cert-pfx-${user}":
         command => "${command_pfxgen}",
         require => [File["doazure-cert-pem-${user}"]],
         creates => "${filepath}${cert_name}-cert.pfx",
@@ -99,50 +103,50 @@ define doazure::creduser (
       windows_env { "doazure-envvar-sub-sid-${user}":
         user      => "${user}",
         mergemode => 'clobber',
-        variable => 'ARM_SUBSCRIPTION_ID',
-        value => $subscription,
+        variable  => 'ARM_SUBSCRIPTION_ID',
+        value     => $subscription,
       }
       windows_env { "doazure-envvar-tenant-id-${user}":
         user      => "${user}",
         mergemode => 'clobber',
-        variable => 'ARM_TENANT_ID',
-        value => $tenant_directory_id,
+        variable  => 'ARM_TENANT_ID',
+        value     => $tenant_directory_id,
       }
       windows_env { "doazure-envvar-client-id-${user}":
         user      => "${user}",
         mergemode => 'clobber',
-        variable => 'ARM_CLIENT_ID',
-        value => $client_id,
+        variable  => 'ARM_CLIENT_ID',
+        value     => $client_id,
       }
       windows_env { "doazure-envvar-client-cert-path-${user}":
         user      => "${user}",
         mergemode => 'clobber',
-        variable => 'ARM_CLIENT_CERTIFICATE_PATH',
-        value => "${filepath}${cert_name}-cert.pfx",
+        variable  => 'ARM_CLIENT_CERTIFICATE_PATH',
+        value     => "${filepath}${cert_name}-cert.pfx",
       }
       windows_env { "doazure-envvar-admin-client-id-${user}":
         user      => "${user}",
         mergemode => 'clobber',
-        variable => 'TF_VAR_client_id',
-        value => $client_id,
+        variable  => 'TF_VAR_client_id',
+        value     => $client_id,
       }
       windows_env { "doazure-envvar-admin-client-secret-${user}":
         user      => "${user}",
         mergemode => 'clobber',
-        variable => 'TF_VAR_client_secret',
-        value => $client_secret,
+        variable  => 'TF_VAR_client_secret',
+        value     => $client_secret,
       }
       windows_env { "doazure-envvar-tenant-directory-id-${user}":
         user      => "${user}",
         mergemode => 'clobber',
-        variable => 'TF_VAR_tenant_directory_id',
-        value => $tenant_directory_id,
+        variable  => 'TF_VAR_tenant_directory_id',
+        value     => $tenant_directory_id,
       }
       windows_env { "doazure-envvar-admin-user-object-id-${user}":
         user      => "${user}",
         mergemode => 'clobber',
-        variable => 'TF_VAR_admin_user_object_id',
-        value => $admin_user_object_id,
+        variable  => 'TF_VAR_admin_user_object_id',
+        value     => $admin_user_object_id,
       }
 
       # generate the pfx file

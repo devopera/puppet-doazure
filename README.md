@@ -6,6 +6,8 @@ Puppet module to locally set up Azure credentials
 Changelog
 ---------
 
+* v0.0.9
+    * Tightened file permissions for credentials
 * v0.0.8
     * Added dowindows::cygwin::run if defined
 * v0.0.7
