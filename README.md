@@ -6,6 +6,10 @@ Puppet module to locally set up Azure credentials
 Changelog
 ---------
 
+* v0.1.0
+    * Added optional Azure DevOps config
+* v0.0.10
+    * Added optional storage_account_access_key
 * v0.0.9
     * Tightened file permissions for credentials
 * v0.0.8

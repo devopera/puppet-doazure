@@ -23,6 +23,10 @@ class doazure (
   $cert_pem = '',
   $cert_crt = '',
 
+  # optional template vars
+  $storage_account_access_key = undef,
+  $azure_devops = {},
+
   # end of class arguments
   # ----------------------
   # begin class
@@ -63,6 +67,8 @@ class doazure (
       cert_name => $cert_name,
       cert_pem => $cert_pem,
       cert_crt => $cert_crt,
+      storage_account_access_key => $storage_account_access_key,
+      azure_devops => $azure_devops,
     }
   }
 

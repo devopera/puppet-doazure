@@ -7,6 +7,16 @@ export ARM_SUBSCRIPTION_ID="<%= @subscription %>"
 export ARM_TENANT_ID="<%= @tenant_directory_id %>"
 export ARM_CLIENT_ID="<%= @client_id %>"
 export ARM_CLIENT_CERTIFICATE_PATH="${HOME}/.azure/<%= @cert_name %>-cert.pfx"
+<%- if @storage_account_access_key -%>
+export ARM_ACCESS_KEY="<%= @storage_account_access_key %>"
+<%- end -%>
+
+<%- if @azure_devops -%>
+# export environment variables for Azure DevOps provider
+export AZDO_ORG_SERVICE_URL="<%= @azure_devops['org_service_url'] %>"
+export AZDO_PERSONAL_ACCESS_TOKEN="<%= @azure_devops['personal_access_token'] %>"
+
+<%- end -%>
 # export environment variables for use in Terraform scripts
 export TF_VAR_client_id="<%= @client_id %>"
 export TF_VAR_client_secret="<%= @client_secret %>"

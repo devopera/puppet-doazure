@@ -24,6 +24,10 @@ define doazure::creduser (
   $cert_pem             = '',
   $cert_crt             = '',
 
+  # optional template vars
+  $storage_account_access_key = undef,
+  $azure_devops = {},
+
   # end of class arguments
   # ----------------------
   # begin class
@@ -123,6 +127,32 @@ define doazure::creduser (
         mergemode => 'clobber',
         variable  => 'ARM_CLIENT_CERTIFICATE_PATH',
         value     => "${filepath}${cert_name}-cert.pfx",
+      }
+      if ($storage_account_access_key != undef) {
+        windows_env { "doazure-envvar-storage-acckey-${user}":
+          user      => "${user}",
+          mergemode => 'clobber',
+          variable  => 'ARM_ACCESS_KEY',
+          value     => $storage_account_access_key,
+        }
+      }
+      if ($azure_devops != {}) {
+        if ($azure_devops['org_service_url'] != undef) {
+          windows_env { "doazure-envvar-azuredevops-orgservurl-${user}":
+            user      => "${user}",
+            mergemode => 'clobber',
+            variable  => 'AZDO_ORG_SERVICE_URL',
+            value     => $azure_devops['org_service_url'],
+          }
+        }
+        if ($azure_devops['personal_access_token'] != undef) {
+          windows_env { "doazure-envvar-azuredevops-pat-${user}":
+            user      => "${user}",
+            mergemode => 'clobber',
+            variable  => 'AZDO_PERSONAL_ACCESS_TOKEN',
+            value     => $azure_devops['personal_access_token'],
+          }
+        }
       }
       windows_env { "doazure-envvar-admin-client-id-${user}":
         user      => "${user}",
