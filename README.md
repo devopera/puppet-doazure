@@ -6,6 +6,8 @@ Puppet module to locally set up Azure credentials
 Changelog
 ---------
 
+* v0.1.1
+    * Added basic Windows and Ubuntu support
 * v0.1.0
     * Added optional Azure DevOps config
 * v0.0.10

@@ -48,6 +48,12 @@ class doazure (
         ensure_packages(['azure-cli'], { ensure => 'present', require => [Yumrepo['azure-cli']] })
       }
     }
+    ubuntu, debian: {
+      ensure_packages(['azure-cli'], { ensure => 'present'} )
+    }
+    windows: {
+      ensure_packages(['azure-cli'], {})
+    }
   }
 
   # create single user if details passed in vars
