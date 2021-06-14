@@ -52,7 +52,7 @@ class doazure (
       ensure_packages(['azure-cli'], { ensure => 'present'} )
     }
     windows: {
-      ensure_packages(['azure-cli'], {})
+      ensure_packages(['azure-cli'], { provider => 'chocolatey', })
     }
   }
 
